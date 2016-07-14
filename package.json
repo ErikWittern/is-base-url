@@ -1,0 +1,20 @@
+{
+  "name": "is-base-url",
+  "version": "0.0.1",
+  "description": "A small tool to check whether a given URL is likely to be a base url of a web API",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js | tap-spec"
+  },
+  "keywords": [
+    "api",
+    "base url",
+    "base path"
+  ],
+  "author": "Erik Wittern",
+  "license": "MIT",
+  "devDependencies": {
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.0"
+  }
+}
