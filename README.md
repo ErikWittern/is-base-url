@@ -39,3 +39,5 @@ Use it via:
 The `score` is a value ranging from -1 to 1. The more positive features are `true`, the higher the score. Reversely, the more negative features are `true`, the lower score. Thus, the higher the value, the more like the given URL is a base URL.
 
 `isBaseUrl` will return `undefined` if 1) the given variable is not a string or 2) if the given string is not a valid URL.
+
+License: MIT
