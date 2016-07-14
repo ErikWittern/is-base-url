@@ -1,6 +1,6 @@
 {
   "name": "is-base-url",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A small tool to check whether a given URL is likely to be a base url of a web API",
   "main": "index.js",
   "scripts": {
