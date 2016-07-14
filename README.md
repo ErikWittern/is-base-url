@@ -1,6 +1,6 @@
 # is-base-url
 
-A small tool to check whether a given URL is likely to be a base url of a web API.
+A small tool to check whether a given URL is likely to be a base url of a web API. `is-base-url` takes as input a URL string and returns a `score` for how likely it is a base URL. To do so, `is-base-url` considers lexical features of the given URL that either support or discourage the classification as a base URL.
 
 ## Usage
 
