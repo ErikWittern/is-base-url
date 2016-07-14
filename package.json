@@ -2,6 +2,10 @@
   "name": "is-base-url",
   "version": "1.0.0",
   "description": "A small tool to check whether a given URL is likely to be a base url of a web API",
+  "repository" :{
+    "type" : "git",
+    "url" : "https://github.com/ErikWittern/is-base-url"
+  },
   "main": "index.js",
   "scripts": {
     "test": "node test.js | tap-spec"
