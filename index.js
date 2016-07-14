@@ -1,3 +1,10 @@
+/**
+ * is-base-url
+ * A small tool to check whether a given URL is likely to be a base url of a web API
+ *
+ * Author: Erik Wittern
+ * License: MIT
+ */
 'use strict'
 
 var urlLib = require('url')
@@ -48,7 +55,7 @@ var getBaseUrlFeatures = function (urlStr) {
   // POSITIVE features:
   // ------------------
   // strings pointing to API:
-  result.positive.containsApiSubstring = /api|rest|sdk|dev/gi.test(urlStr)
+  result.positive.containsApiSubstring = /api/gi.test(urlStr)
 
   // version numbers within URL:
   result.positive.containsVersionSubstring = /v[0-9]|[0-9]\.[0-9]/gi.test(urlStr)
