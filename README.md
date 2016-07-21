@@ -36,8 +36,21 @@ Use it via:
      * }
      */
 
-If the given parameter is not a string or not a valid url, is-base-url will return `undefined`. Otherwise, the `score` is a value ranging from -1 to 1. The more positive features are `true`, the higher the score. Reversely, the more negative features are `true`, the lower score. Thus, the higher the value, the more like the given URL is a base URL.
+The `score` is a value ranging from -1 to 1. The more positive features are `true`, the higher the score. Reversely, the more negative features are `true`, the lower score. Thus, the higher the value, the more like the given URL is a base URL.
 
 `isBaseUrl` will return `undefined` if 1) the given variable is not a string or 2) if the given string is not a valid URL.
+
+
+### Options
+
+If you want, you can pass an options object to `isBaseUrl` to customize its behavior:
+
+    var result = isBaseUrl('http://api.twitter.com/v1', {
+      ...options...
+    })
+
+If you don't set an option, its default value will be used. The following options are available:
+
+- `checkUrlValid` (default: `true`) - Determines whether the given URL is checked for validity. If the check is performed and an invalid URL is provided, `isBaseUrl` will return `undefined`.
 
 License: MIT

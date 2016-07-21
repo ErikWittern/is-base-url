@@ -19,6 +19,16 @@ test('Passing a string that is not a valid URL should return undefined', functio
   t.equal(result, undefined)
 })
 
+test('Passing a string that is not a valid URL should NOT return undefined IF URL checking is disabled', function (t) {
+  t.plan(1)
+
+  var result = isBaseUrl('some sting - no url', {
+    checkUrlValid: false
+  })
+
+  t.notEqual(result, undefined)
+})
+
 test('Passing a URL that is obviously a base URL should result in score 1', function (t) {
   t.plan(1)
 

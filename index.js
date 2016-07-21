@@ -9,12 +9,20 @@
 
 var urlLib = require('url')
 
-module.exports = function (urlStr, options) {
+module.exports = function (urlStr, opts) {
+  opts = opts || {}
+  var checkUrlValid = opts.checkUrlValid === false ? false : true
+
   // return undefined if not a string or empty string
   if (typeof urlStr !== 'string') return
 
   // return undefined if not a valid url
-  if (!isValidUrl(urlStr)) return
+  if (checkUrlValid && !isValidUrl(urlStr)) return
+
+  // process options:
+  // if (typeof options !== 'undefined') {
+
+  // }
 
   // determine features for / against base URL
   var baseUrlFeatures = getBaseUrlFeatures(urlStr)
