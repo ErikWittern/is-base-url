@@ -60,3 +60,25 @@ test('Passing a URL that is a base URL should result in score > 0', function (t)
 
   t.true(result.score > 0)
 })
+
+test('Passing a URL with various features should result in score close to 0', function (t) {
+  t.plan(1)
+
+  var result = isBaseUrl('http://api.rottentomatoes.com/v1/users.json?order=desc')
+
+  t.true(result.score < 0.25 && result.score > -0.25)
+})
+
+test('Passing a URL with various features should result in score < 0 if one of the negative features is highly weighted', function (t) {
+  t.plan(1)
+
+  var result = isBaseUrl('http://api.rottentomatoes.com/v1/users.json?order=desc', {
+    weights: {
+      negative: {
+        hasQueryString: 3
+      }
+    }
+  })
+
+  t.true(result.score < 0)
+})

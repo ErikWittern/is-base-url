@@ -40,6 +40,26 @@ The `score` is a value ranging from -1 to 1. The more positive features are `tru
 
 `isBaseUrl` will return `undefined` if 1) the given variable is not a string or 2) if the given string is not a valid URL.
 
+### Features
+
+`isBaseUrl` considers positive and negative features.
+
+#### Positive
+
+- `containsApiSubstring`: true if the given URL contains the substring `api`.
+- `containsVersionSubstring`: true if the given URL contains a substring indicating a version number, e.g. `v1`, `v.1.2`.
+- `endsWithVersionSubstring`: true if the given URL ends with a version number.
+- `endsWithNumber`: true if the given URL ends with a number.
+
+#### Negative
+
+- `hasQueryString`: true if the given URL has a query string (following an `?`).
+- `hasFragment`: true if the given URL has a fragment (following an `#`).
+- `containsNonApiSubstring`: true if the given URL contains a string not associated with a base URL, e.g., `schema`, `w3`.
+- `overTwoPath`: true if the given URL has over 2 path components.
+- `endsWithFileExtension`: true if the given URL ends with a file extension, e.g., `.json`, `.html`. This feature considers the URL substring before the query string or fragment, if present.
+- `containsBracket`: true if the given URL contains a bracket, e.g., `{`, `>`.
+- `isHomepage`: true if the given URL is equal to the homepage of that domain, e.g., `http://www.rottentomatoes.com`.
 
 ### Options
 
@@ -52,5 +72,16 @@ If you want, you can pass an options object to `isBaseUrl` to customize its beha
 If you don't set an option, its default value will be used. The following options are available:
 
 - `checkUrlValid` (default: `true`) - Determines whether the given URL is checked for validity. If the check is performed and an invalid URL is provided, `isBaseUrl` will return `undefined`.
+- `weights` (default: all features have weight `1`) - Allows to assign custom weights to specific features. For example, to make `endsWithFileExtension` more important, do: 
+
+      var result = isBaseUrl('http://api.twitter.com/v1', {
+        weights: {
+          negative: {
+            endsWithFileExtension: 3
+          }
+        }
+      })
+
+  Note: passing weights will result in the score not necessarily ranging from -1 to 1 anymore.
 
 License: MIT

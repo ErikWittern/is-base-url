@@ -10,6 +10,7 @@
 var urlLib = require('url')
 
 module.exports = function (urlStr, opts) {
+  // console.log(urlStr)
   opts = opts || {}
   var checkUrlValid = opts.checkUrlValid === false ? false : true
 
@@ -19,32 +20,101 @@ module.exports = function (urlStr, opts) {
   // return undefined if not a valid url
   if (checkUrlValid && !isValidUrl(urlStr)) return
 
-  // process options:
-  // if (typeof options !== 'undefined') {
-
-  // }
-
   // determine features for / against base URL
   var baseUrlFeatures = getBaseUrlFeatures(urlStr)
+  // console.log(JSON.stringify(baseUrlFeatures, null, 2))
 
-  // calculate score out of them
+  // get weights to apply:
+  var weights = getWeights(opts)
+
+  // Determine the weights to apply to positive and negative features. These
+  // weights compensate the fact that there are different numbers of positive
+  // and negative features.
+  var numPos = Object.keys(baseUrlFeatures.positive).length
+  var numNeg = Object.keys(baseUrlFeatures.negative).length
+  var weightPos = 1 / numPos
+  var weightNeg = 1 / numNeg
+  // var weightsOverall = getWeightsOverall(weights)
+
   var posScore = 0
   for (var i in baseUrlFeatures.positive) {
-    if (baseUrlFeatures.positive[i]) posScore++
+    if (baseUrlFeatures.positive[i]) {
+      posScore += weightPos * weights.positive[i]
+    }
   }
-  var posOverall = posScore / Object.keys(baseUrlFeatures.positive).length // 0 to 1
 
   var negScore = 0
   for (var j in baseUrlFeatures.negative) {
-    if (baseUrlFeatures.negative[j]) negScore++
+    if (baseUrlFeatures.negative[j]) {
+      negScore += weightNeg * weights.negative[j]
+    }
   }
-  var negOverall = negScore / Object.keys(baseUrlFeatures.negative).length // 0 to 1
+
+  var score = posScore - negScore
+  // console.log('%s - %s = %s', posScore, negScore, score)
 
   return {
     candidateUrl: urlStr,
-    score: posOverall - negOverall,
+    score: score,
     features: baseUrlFeatures
   }
+}
+
+/**
+ * Returns weights assigned to every feature.
+ *
+ * @param  {object} opts The options passed to isBaseUrl
+ * @return {object}      Weights for positive and negative features
+ */
+var getWeights = function (opts) {
+  var weights = {
+    positive: {
+      containsApiSubstring: 1,
+      containsVersionSubstring: 1,
+      endsWithVersionSubstring: 1,
+      endsWithNumber: 1
+    },
+    negative: {
+      hasQueryString: 1,
+      hasFragment: 1,
+      containsNonApiSubstring: 1,
+      overTwoPaths: 1,
+      endsWithFileExtension: 1,
+      containsBracket: 1,
+      isHomepage: 1
+    }
+  }
+
+  if (typeof opts.weights !== 'undefined') {
+    if (typeof opts.weights.positive !== 'undefined') {
+      weights.positive.containsApiSubstring =
+        opts.weights.positive.containsApiSubstring || 1
+      weights.positive.containsVersionSubstring =
+        opts.weights.positive.containsVersionSubstring || 1
+      weights.positive.endsWithVersionSubstring =
+        opts.weights.positive.endsWithVersionSubstring || 1
+      weights.positive.endsWithNumber =
+        opts.weights.positive.endsWithNumber || 1
+    }
+    if (typeof opts.weights.negative !== 'undefined') {
+      weights.negative.hasQueryString =
+        opts.weights.negative.hasQueryString || 1
+      weights.negative.hasFragment =
+        opts.weights.negative.hasFragment || 1
+      weights.negative.containsNonApiSubstring =
+        opts.weights.negative.containsNonApiSubstring || 1
+      weights.negative.overTwoPaths =
+        opts.weights.negative.overTwoPaths || 1
+      weights.negative.endsWithFileExtension =
+        opts.weights.negative.endsWithFileExtension || 1
+      weights.negative.containsBracket =
+        opts.weights.negative.containsBracket || 1
+      weights.negative.isHomepage =
+        opts.weights.negative.isHomepage || 1
+    }
+  }
+
+  return weights
 }
 
 /**
@@ -100,9 +170,9 @@ var getBaseUrlFeatures = function (urlStr) {
   result.negative.overTwoPaths = numPaths > 2
 
   // no ending in static resource, please:
-  var urlNoQuery = urlStr.split('?')[0]
-  if ((urlNoQuery.match(/\//g) || []).length > 2) {
-    result.negative.endsWithFileExtension = /\.[a-zA-Z0-9]{2,5}$/gi.test(urlNoQuery)
+  var urlNoQueryHash = urlStr.split('#')[0].split('?')[0]
+  if ((urlNoQueryHash.match(/\//g) || []).length > 2) {
+    result.negative.endsWithFileExtension = /\.[a-zA-Z0-9]{2,5}$/gi.test(urlNoQueryHash)
   } else {
     result.negative.endsWithFileExtension = false
   }
