@@ -82,3 +82,11 @@ test('Passing a URL with various features should result in score < 0 if one of t
 
   t.true(result.score < 0)
 })
+
+test('Passing a URL where "api" is part of a larger term should return containsApiSubstring = false', function (t) {
+  t.plan(1)
+
+  var result = isBaseUrl('http://www.rottenapis.com')
+
+  t.true(!result.features.positive.containsApiSubstring)
+})

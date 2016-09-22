@@ -133,7 +133,7 @@ var getBaseUrlFeatures = function (urlStr) {
   // POSITIVE features:
   // ------------------
   // strings pointing to API:
-  result.positive.containsApiSubstring = /api/gi.test(urlStr)
+  result.positive.containsApiSubstring = /[\.|\/|\?|&]api[\.|\/|\?|&]?/gi.test(urlStr)
 
   // version numbers within URL:
   result.positive.containsVersionSubstring = /v[0-9]|[0-9]\.[0-9]/gi.test(urlStr)
